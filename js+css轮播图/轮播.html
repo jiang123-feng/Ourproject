@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="./form.css">
+  <style></style>
+</head>
+<body>
+  <ul id="banner">
+
+  </ul>
+
+</body>
+</html>
+<script>
+  window.onload=function(){
+    //定时器轮播图片
+    let timer=setInterval(get_next,3000)
+    //////////////////////////////第一部分////////////////////////////////
+    //先创建一个数组sz
+    let sz=new Array();
+    //轮播图下方滑块的数组
+    let szdiv=new Array();
+    //获取轮播图的id
+    var cur_ul=document.getElementById("banner");
+    //动态插入标签并添加属性
+    for(let i=1;i<=5;i++){
+      //创建标签
+      var cur_li=document.createElement("li")
+      var cur_img=document.createElement("img");
+      //循环添加到所有的图片
+      cur_img.src="image/"+ i +".png";
+      //添加属性
+      cur_img.style.width="600px";
+      cur_img.style.height="400px";
+      //图片添加到li中  li插入到ul中
+      cur_li.appendChild(cur_img);
+      cur_ul.appendChild(cur_li)
+      //把li放到数组里
+      sz.push(cur_li);
+      //sz是数组,数组的长度比下标多1,所以减1就能循环得到所有图片并添加属性
+      sz[sz.length-1].style.left="0px";
+    ///////////////////////////////第一部分////////////////////////////////////
+
+
+    ////////////////////////////////第六部分////////////////////////////////////
+    //鼠标移入 移出  事件   移入计时器停止  移出定时器重新开始工作
+      cur_li.onmouseenter=function(){
+        clearInterval(timer);
+      }
+
+      cur_li.onmouseleave=function(){
+        timer=setInterval(get_next,3000)
+      }
+/////////////////////////////////////第六部分////////////////////////////////////
+
+//给图片设置id属性 展示的那一张是第四张图片i=4 则id为1
+      if(i!=5){
+        cur_li.id=5-i;
+      }else{
+        cur_li.id=5
+      }
+
+     
+
+//////////////////////////////////////第七部分//////////////////////////////////
+    //同样的创建元素  添加样式
+      let bottom_div=document.createElement("div");
+      //数值可以自己看着调节  为了让间距看起来还不错
+      bottom_div.style.left=190*i+"px";
+      //给 div  设置一个name 绑定事件用  
+      //div  还在for 循环中
+      bottom_div.name=i;
+      //把div放到数组中
+      szdiv.push(bottom_div)
+      //放到ul中
+      cur_ul.appendChild(bottom_div) 
+     }
+//////////////////////////////////////第七部分/////////////////////////////////
+
+
+
+      
+/////////////////////////////////////以上都在for循环中//////////////////////////////////////////////////////////////////以上都在for循环中/////////////////////////////
+
+
+
+
+
+    ///////////////////////第四部分/////////////////////////////////////////////
+    //设置前后箭头 用图片设置
+    //创建元素  引用路径  添加属性
+     let pre_img=document.createElement("img")
+     pre_img.src="image/preImg.png";
+     pre_img.style.width="60px"
+ 
+     pre_img.style.position="absolute";
+     pre_img.style.left=0;
+     pre_img.style.top=0;
+     pre_img.style.bottom=0;
+     pre_img.style.margin="auto";
+     pre_img.style.zIndex=100;
+     cur_ul.appendChild(pre_img);
+
+     let next_img=document.createElement("img")
+     next_img.src="image/nextImg.png";
+     next_img.style.width="60px"
+     next_img.style.position="absolute";
+     next_img.style.right=0;
+     next_img.style.top=0;
+     next_img.style.bottom=0;
+     next_img.style.margin="auto";
+     next_img.style.zIndex=100;
+     cur_ul.appendChild(next_img);
+///////////////////////////第四部分//////////////////////////////////////////////
+///////////////////////////第五部分//////////////////////////////////////////////
+     //给前后箭头绑定事件
+     pre_img.onclick=function(){
+       //先清除定时器 点击后再加上去
+       clearInterval(timer)
+       //这里是调用函数,得到上一张图片
+       get_pre();
+       timer=setInterval(get_next,3000)
+     }
+    //参考上边的
+     next_img.onclick=function(){
+       clearInterval(timer);
+       get_next();
+       timer=setInterval(get_next,3000)
+     }
+///////////////////////////第五部分///////////////////////////////////////////////
+      //默认引入的是第一个滑块  设置颜色
+      szdiv[0].style.background="#e431fc"
+      for(let i=0;i<szdiv.length;i++){
+        szdiv[i].onmouseenter=function(){
+          clearInterval(timer)
+          let len1=sz[len-1].id;
+          let len2=szdiv[i].name;
+          let dis=Math.max(len1,len2)-Math.min(len1,len2)
+          if(len1>len2){
+            while(dis--)
+              get_pre()
+          }else{
+            while(dis--)
+               get_next()
+          }
+          timer=setInterval(get_next,3000)
+        }
+      }
+
+  
+//////////////////////////第二部分//////////////////////////////////////////////
+      //li  css里设置的绝对定位, float=left所以都在左边排列
+      //len 声明赋值之后是数字  在for循环外边  单设属性
+      let len=sz.length-1;
+        sz[len-2].style.left='0px';
+        //zindex 设置后图片会在原来的图片上边. 不影响其他图片排列
+        sz[len-1].style.zIndex=100;
+        //下边两张 上边一张 所以上边的那一张要在中间 每张照片的宽度是600px 加起来就是ul的宽度1200px
+        //ul里刚好放两张照片,所以设置zindex的在上边的那一张照片要设置left=300px才能在中间
+        sz[len-1].style.left="300px"
+        sz[len-1].style.transform="scale(1.3)";
+        //横向排列的三张照片下边的两张的右边那一张照片
+        sz[len].style.left="600px"
+//////////////////////////第二部分////////////////////////////////////////////////
+
+///////////////////////////第三部分//////////////////////////////////////////////
+        function get_pre(){
+          //得到第一张图片
+        let give_up=sz[0];
+          //shift()方法就是把数组中的第一个元素删除并返回该项  打印的话就是能打印出这一项,但是数组中已经没有这一项了
+        sz.shift()
+        sz.push(give_up)
+        for(let i=0;i<sz.length;i++){
+          sz[i].style.zIndex=i;
+          sz[i].style.transform="scale(1)";
+        }
+         sz[len-2].style.left="0px";
+         sz[len-1].style.zIndex=100
+         sz[len-1].style.left="300px";
+         sz[len-1].style.transform="scale(1.3)"
+         sz[len-1].style.opacity=1;
+         sz[len].style.left="600px"
+         //调用函数
+         sync_szdiv()
+
+
+      }
+
+      function get_next(){
+        //声明一个变量 接住数组中的最后一张照片
+        let give_up=sz[len];
+        //pop() 把数组中的最后一个数组项删除
+        sz.pop()
+        //unshift()方法可以在数组前边添加一个或多个数组项
+        sz.unshift(give_up)
+        //数组sz里的照片数量是不变的,设置一个for循环,让数组里边的照片能够移动
+        //数组遍历添加的照片下标为1,所有不放大
+        for(let i=0;i<sz.length;i++){
+          sz[i].style.zIndex=i;
+          sz[i].style.transform="scale(1)";
+        }
+        //这里重新得到的换位之后的照片重新设置,其实和前边的一样
+        //最前边设置定时器轮播
+         sz[len-2].style.left="0px";
+         sz[len-1].style.zIndex=100
+         sz[len-1].style.left="300px";
+         sz[len-1].style.transform="scale(1.3)"
+         sz[len-1].style.opacity=1;
+         sz[len].style.left="600px";
+         //调用函数
+         sync_szdiv()
+      }
+////////////////////////////////第三部分//////////////////////////////////////////
+
+//////////////////////第八部分///////////////////////////////////////
+   function sync_szdiv(){
+     for(let i=0;i<szdiv.length;i++){
+       //我们设置的div的name是从1~5 默认第一个div就是展示的那张图片
+       //展示的那张图片的id就是前方解释的第四章图片的id=1  设置样式
+       if(szdiv[i].name==sz[len-1].id)
+       szdiv[i].style.background="#e431fc"
+       else
+       szdiv[i].style.background="white"
+     }
+   }
+
+  }
+</script>
